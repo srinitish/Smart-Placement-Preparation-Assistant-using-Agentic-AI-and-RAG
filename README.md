@@ -21,17 +21,20 @@ The project uses **Agentic AI + Retrieval-Augmented Generation (RAG)** to perfor
 
 ## Key Features
 
-✅ Resume Upload and Analysis
-✅ Technical Skill Extraction from Job Description
-✅ Resume Skill Matching using RAG
-✅ Placement Readiness Score Calculation
-✅ Missing Skill Detection
-✅ Personalized Learning Roadmap
-✅ Resume Storage using AWS S3
-✅ Analysis History using DynamoDB
-✅ Resume Reuse from Cloud History
-✅ Delete Resume from S3
-✅ Delete Saved Analysis History
+✅ Resume Upload and Analysis  
+✅ Technical Skill Extraction from Job Description  
+✅ Resume Skill Matching using RAG  
+✅ Placement Readiness Score Calculation  
+✅ Missing Skill Detection  
+✅ Personalized Learning Roadmap  
+✅ Resume Storage using AWS S3  
+✅ Analysis History using DynamoDB  
+✅ Resume Reuse from Cloud History  
+✅ Delete Resume from S3  
+✅ Delete Saved Analysis History  
+✅ Cloud Deployment using AWS EC2  
+✅ IAM Role-Based Secure AWS Access  
+✅ Persistent Resume Storage and Retrieval from Cloud  
 
 ---
 
@@ -54,6 +57,7 @@ The project uses **Agentic AI + Retrieval-Augmented Generation (RAG)** to perfor
 * AWS S3
 * AWS DynamoDB
 * AWS IAM
+* AWS EC2
 
 ### Backend
 
@@ -99,6 +103,9 @@ User Upload Resume + Job Description
                 │
                 ▼
           Display Results
+                │
+                ▼
+       Hosted on AWS EC2
 ```
 
 ---
@@ -203,6 +210,60 @@ Stored Data:
 
 ---
 
+### AWS EC2
+
+Used for deploying and hosting the Streamlit application in the cloud.
+
+Purpose:
+
+* Public access to the application
+* Continuous availability
+* Secure IAM Role-based access to AWS services
+* Hosting Agentic AI + RAG workflow
+* Scalable cloud deployment
+
+---
+
+### AWS IAM
+
+Used for secure authentication and authorization.
+
+Purpose:
+
+* EC2 to S3 access without AWS keys
+* EC2 to DynamoDB access without AWS keys
+* Principle of Least Privilege security
+
+---
+
+## Deployment Architecture
+
+```text
+                    ┌───────────────┐
+                    │     User      │
+                    └───────┬───────┘
+                            │
+                            ▼
+                 ┌──────────────────┐
+                 │ Streamlit UI     │
+                 │ AWS EC2 Instance │
+                 └────────┬─────────┘
+                          │
+            ┌─────────────┼─────────────┐
+            ▼                           ▼
+    ┌─────────────┐             ┌─────────────┐
+    │ AWS S3      │             │ DynamoDB    │
+    │ Resume Data │             │ History     │
+    └─────────────┘             └─────────────┘
+                          │
+                          ▼
+                  ┌─────────────┐
+                  │ Groq LLM    │
+                  └─────────────┘
+```
+
+---
+
 ## Project Folder Structure
 
 ```text
@@ -218,10 +279,11 @@ skill_analyser/
 ├── README.md
 ├── .gitignore
 │
-├── ui.png
-├── result.png
-├── s3.png
-└── dynamodb.png
+├── Images/
+│   ├── ui.png
+│   ├── result.png
+│   ├── s3.png
+│   └── dynamodb.png
 ```
 
 ---
@@ -279,6 +341,20 @@ AWS_BUCKET_NAME=your_bucket_name
 AWS_DYNAMODB_TABLE=resume-analysis-history
 ```
 
+### Production Deployment (EC2)
+
+For AWS EC2 deployment, IAM Roles are used instead of storing AWS credentials.
+
+Required Environment Variables:
+
+```env
+GROQ_API_KEY=your_groq_api_key
+
+AWS_REGION=ap-south-1
+AWS_BUCKET_NAME=resume-skill-analyzer-nitish
+AWS_DYNAMODB_TABLE=resume-analysis-history
+```
+
 ---
 
 ## Add `.gitignore`
@@ -296,6 +372,20 @@ __pycache__/
 
 ```bash
 streamlit run app.py
+```
+
+### AWS EC2 Deployment
+
+```bash
+streamlit run app.py \
+--server.address 0.0.0.0 \
+--server.port 8501
+```
+
+Access:
+
+```text
+http://<EC2-PUBLIC-IP>:8501
 ```
 
 ---
@@ -321,11 +411,13 @@ The system:
 * Interview question generator
 * Resume improvement suggestions
 * Company-specific preparation plans
-* AWS EC2 deployment
 * CloudWatch monitoring
+* CI/CD Pipeline using GitHub Actions
+* Docker Containerization
+* Multi-user Dashboard
 
 ---
 
 ## Resume Description
 
-**Built a Smart Placement Preparation Assistant using Agentic AI and RAG leveraging LangGraph, Groq LLM, AWS S3, and DynamoDB to analyze resumes against job descriptions, identify skill gaps, calculate placement readiness scores, and generate personalized learning roadmaps for students.**
+**Built a Smart Placement Preparation Assistant using Agentic AI and RAG leveraging LangGraph, Groq LLM, AWS S3, DynamoDB, IAM, and EC2 to analyze resumes against job descriptions, identify skill gaps, calculate placement readiness scores, and generate personalized learning roadmaps for students.**
