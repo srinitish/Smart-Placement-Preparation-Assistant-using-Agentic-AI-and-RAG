@@ -385,7 +385,7 @@ streamlit run app.py \
 Access:
 
 ```text
-http://<EC2-PUBLIC-IP>:8501
+http://13.127.238.142:8501/
 ```
 
 ---
